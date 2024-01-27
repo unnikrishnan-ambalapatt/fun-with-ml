@@ -11,7 +11,7 @@ X = np.array(data.drop(labels=[predict], axis=1))
 y = np.array(data[predict])
 
 best_accuracy = 0
-for _ in range(30):
+for _ in range(1000):
     X_train, X_test, y_train, y_test = sklearn.model_selection.train_test_split(X, y, test_size=0.1)
 
     linear_modl = linear_model.LinearRegression()
