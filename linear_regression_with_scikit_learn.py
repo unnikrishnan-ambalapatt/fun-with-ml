@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import sklearn.model_selection
+from matplotlib import style, pyplot
 from sklearn import linear_model
 import pickle
 
@@ -36,3 +37,9 @@ model_from_pickle = pickle.load(pickle_input)
 predictions_from_pickle = model_from_pickle.predict(X_test)
 for x in range(len(predictions_from_pickle)):
     print(predictions_from_pickle[x], X_test[x], y_test[x])
+
+style.use('ggplot')
+pyplot.scatter(data['G1'], data['G3'])
+pyplot.xlabel('G1')
+pyplot.ylabel('Grade')
+pyplot.show()
