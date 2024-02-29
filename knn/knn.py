@@ -12,7 +12,7 @@ buying = le.fit_transform(list(data_frame["buying"]))
 maint = le.fit_transform(list(data_frame["maint"]))
 door = le.fit_transform(list(data_frame["door"]))
 persons = le.fit_transform(list(data_frame["persons"]))
-lug_boot = le.fit_transform(list(data_frame["leg_boot"]))
+leg_boot = le.fit_transform(list(data_frame["leg_boot"]))
 safety = le.fit_transform(list(data_frame["safety"]))
 cls = le.fit_transform(list(data_frame["class"]))
 
