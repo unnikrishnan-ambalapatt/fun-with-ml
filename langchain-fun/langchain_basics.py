@@ -1,3 +1,4 @@
+from langchain.chains.sequential import SequentialChain
 from langchain_core.prompts import PromptTemplate
 from langchain.chains import LLMChain
 from openai import OpenAI
@@ -15,8 +16,24 @@ print("============================")
 print(completion.choices[0].message)
 
 prompt_template_name = PromptTemplate(
-    input_variables=['cuisine'],
-    template="I want to open a restaurant for {cuisine} food. Suggest a fancy name for this."
+    input_variables=['subject'],
+    template="I want to write a poem about {subject}. Please suggest a good title."
 )
 
-name_chain = LLMChain(llm=client, prompt=prompt_template_name, output_key="restaurant_name")
+name_chain = LLMChain(llm=client, prompt=prompt_template_name, output_key="poem_title")
+
+prompt_template_items = PromptTemplate(
+    input_variables=['poem_title'],
+    template="Give me some beautiful lines for a poem with title {poem_title}."
+)
+
+poem_lines = LLMChain(llm=client, prompt=prompt_template_items, output_key="poem_lines")
+
+chain = SequentialChain(
+    chains=[name_chain, poem_lines],
+    input_variables=['subject'],
+    output_variables=['poem_title', "poem_lines"]
+)
+
+response = chain({'subject': 'philosophy'})
+print(response)
