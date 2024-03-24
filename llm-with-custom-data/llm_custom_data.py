@@ -1,4 +1,5 @@
 import streamlit as st
+from dotenv import load_dotenv
 from PyPDF2 import PdfReader
 from langchain_community.embeddings import HuggingFaceInstructEmbeddings
 from langchain_community.vectorstores.faiss import FAISS
@@ -32,6 +33,7 @@ def create_vectorstore(txt_chunks):
     return faiss_vector_store
 
 
+load_dotenv()
 # Create the base page
 st.set_page_config(page_title="Upload PDFs and chat with their content",
                    page_icon=":books:")
