@@ -1,7 +1,10 @@
 import streamlit as st
 from dotenv import load_dotenv
 from PyPDF2 import PdfReader
+from langchain.chains.conversational_retrieval.base import ConversationalRetrievalChain
+from langchain.memory import ConversationBufferMemory
 from langchain_community.embeddings import HuggingFaceInstructEmbeddings
+from langchain_community.llms.huggingface_hub import HuggingFaceHub
 from langchain_community.vectorstores.faiss import FAISS
 from langchain_text_splitters import CharacterTextSplitter
 
@@ -33,6 +36,19 @@ def create_vectorstore(txt_chunks):
     return faiss_vector_store
 
 
+def get_conversational_chain(vector_store):
+    llm = HuggingFaceHub(repo_id="google/flan-t5-xxl", model_kwargs={"temperature": 0.5, "max_length": 512})
+
+    memory = ConversationBufferMemory(
+        memory_key='chat_history', return_messages=True)
+    conversation_chain = ConversationalRetrievalChain.from_llm(
+        llm=llm,
+        retriever=vector_store.as_retriever(),
+        memory=memory
+    )
+    return conversation_chain
+
+
 load_dotenv()
 # Create the base page
 st.set_page_config(page_title="Upload PDFs and chat with their content",
@@ -56,7 +72,8 @@ with st.sidebar:
             vectorstore = create_vectorstore(text_chunks)
             st.write("Done")
             # create conversation chain
-            # st.session_state.conversation = get_conversation_chain(
-            #     vectorstore)
+            st.session_state.conversation = get_conversational_chain(
+                vectorstore)
+
 st.text_input(label="Chat", placeholder="Start chatting")
 st.caption('Response:')
