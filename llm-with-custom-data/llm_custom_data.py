@@ -8,13 +8,32 @@ from langchain_community.llms.huggingface_hub import HuggingFaceHub
 from langchain_community.vectorstores.faiss import FAISS
 from langchain_text_splitters import CharacterTextSplitter
 
+user_template = '''
+<div class="chat-message user">
+    <div class="avatar">
+        <img src="https://cdn.pixabay.com/photo/2023/05/08/08/41/ai-7977960_1280.jpg" style="max-height: 78px; max-width: 78px; border-radius: 50%; object-fit: cover;">
+    </div>    
+    <div class="message">{{MSG}}</div>
+</div>
+'''
+
+bot_template = '''
+<div class="chat-message bot">
+    <div class="avatar">
+        <img src="https://cdn.pixabay.com/photo/2014/04/03/11/55/robot-312566_1280.png" style="max-height: 78px; max-width: 78px; border-radius: 50%; object-fit: cover;">
+    </div>
+    <div class="message">{{MSG}}</div>
+</div>
+'''
+
 
 def get_plain_text_from_pdf(pdf_files):
     text = ""
     for pdf_file in pdf_files:
         pdf_reader = PdfReader(pdf_file)
-        for page in pdf_reader.pages:
-            text += page.extract_text()
+        # for page in pdf_reader.pages:
+        #     text += page.extract_text()
+        text += pdf_reader.pages[5].extract_text()
     return text
 
 
@@ -49,12 +68,30 @@ def get_conversational_chain(vector_store):
     return conversation_chain
 
 
+def handle_userinput(user_question):
+    response = st.session_state.conversation({'question': user_question})
+    st.session_state.chat_history = response['chat_history']
+
+    for i, message in enumerate(st.session_state.chat_history):
+        if i % 2 == 0:
+            st.write(user_template.replace(
+                "{{MSG}}", message.content), unsafe_allow_html=True)
+        else:
+            st.write(bot_template.replace(
+                "{{MSG}}", message.content), unsafe_allow_html=True)
+
+
 load_dotenv()
 # Create the base page
 st.set_page_config(page_title="Upload PDFs and chat with their content",
                    page_icon=":books:")
 st.header("Upload PDFs and chat with their content :books:")
+
 st.subheader("Type your question below")
+user_question = st.text_input("Ask a question about your documents:")
+if user_question:
+    handle_userinput(user_question)
+
 
 # Create sidebar with file upload option
 with st.sidebar:
@@ -74,6 +111,3 @@ with st.sidebar:
             # create conversation chain
             st.session_state.conversation = get_conversational_chain(
                 vectorstore)
-
-st.text_input(label="Chat", placeholder="Start chatting")
-st.caption('Response:')
