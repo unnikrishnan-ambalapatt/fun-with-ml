@@ -20,7 +20,7 @@ user_template = '''
 bot_template = '''
 <div class="chat-message bot">
     <div class="avatar">
-        <img src="https://cdn.pixabay.com/photo/2014/04/03/11/55/robot-312566_1280.png" style="max-height: 78px; max-width: 78px; border-radius: 50%; object-fit: cover;">
+        <img src="static/robot.png" style="max-height: 78px; max-width: 78px; border-radius: 50%; object-fit: cover;">
     </div>
     <div class="message">{{MSG}}</div>
 </div>
