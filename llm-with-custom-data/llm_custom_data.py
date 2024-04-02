@@ -11,7 +11,8 @@ from langchain_text_splitters import CharacterTextSplitter
 user_template = '''
 <div class="chat-message user">
     <div class="avatar">
-        <img src="https://cdn.pixabay.com/photo/2023/05/08/08/41/ai-7977960_1280.jpg" style="max-height: 78px; max-width: 78px; border-radius: 50%; object-fit: cover;">
+        <img src="https://cdn.pixabay.com/photo/2023/05/08/08/41/ai-7977960_1280.jpg"
+        style="max-height: 78px; max-width: 78px; border-radius: 50%; object-fit: cover;">
     </div>    
     <div class="message">{{MSG}}</div>
 </div>
@@ -20,7 +21,8 @@ user_template = '''
 bot_template = '''
 <div class="chat-message bot">
     <div class="avatar">
-        <img src="static/robot.png" style="max-height: 78px; max-width: 78px; border-radius: 50%; object-fit: cover;">
+        <img src="static/robot.png" 
+        style="max-height: 78px; max-width: 78px; border-radius: 50%; object-fit: cover;">
     </div>
     <div class="message">{{MSG}}</div>
 </div>
@@ -88,10 +90,9 @@ st.set_page_config(page_title="Upload PDFs and chat with their content",
 st.header("Upload PDFs and chat with their content :books:")
 
 st.subheader("Type your question below")
-user_question = st.text_input("Ask a question about your documents:")
-if user_question:
-    handle_userinput(user_question)
-
+user_q = st.text_input("Ask a question about your documents:")
+if user_q:
+    handle_userinput(user_q)
 
 # Create sidebar with file upload option
 with st.sidebar:
